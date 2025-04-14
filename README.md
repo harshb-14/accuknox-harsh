@@ -4,7 +4,6 @@
 [![Supabase](https://img.shields.io/badge/Supabase-2.39.7-green.svg)](https://supabase.io/)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4.1-38B2AC.svg)](https://tailwindcss.com/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5.3-blue.svg)](https://www.typescriptlang.org/)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 **Problem Statement for Product Manager**
 
@@ -31,6 +30,16 @@ Create low-fidelity wireframes for the user interface for this product.
 development team
 
 <img width="1470" alt="Image of Accuknox PM | Harsh Assignment" src="https://github.com/user-attachments/assets/8a6a4571-b957-45e2-b35e-56e9e63bb2e1" />
+
+## Low-Fidelity Wireframes
+
+**1. Approach of Wireframe Design**
+<img width="577" alt="Approach of Wireframe Design" src="https://github.com/user-attachments/assets/7136532e-16fe-4992-a5dd-c787d58c0832" />
+<br><br>
+
+**2. Notebook Handmade Design**
+<img width="577" alt="Notebook Handmade Design" src="https://github.com/user-attachments/assets/a236e9b8-42b4-45e7-bf36-9ee0ebe9efc8" /> 
+<br><br>
 
 
 ## Architecture
