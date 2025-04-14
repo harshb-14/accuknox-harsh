@@ -159,7 +159,7 @@ container-security-scanner/
 
 1. Clone the repository:
    ```bash
-   git clone [https://github.com/harsh3311/accuknox-harsh.git](https://github.com/harsh3311/accuknox-harsh.git)
+   git clone https://github.com/harsh3311/accuknox-harsh.git
    cd accuknox-harsh3311
    ```
 
