@@ -159,8 +159,8 @@ container-security-scanner/
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/container-security-scanner.git
-   cd container-security-scanner
+   git clone [https://github.com/harsh3311/accuknox-harsh.git](https://github.com/harsh3311/accuknox-harsh.git)
+   cd accuknox-harsh3311
    ```
 
 2. Install dependencies:
