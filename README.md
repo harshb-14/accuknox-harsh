@@ -6,7 +6,29 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5.3-blue.svg)](https://www.typescriptlang.org/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-A modern, real-time container image security scanner built with React and Supabase. Monitor, analyze, and secure your container images with advanced vulnerability detection and compliance tracking.
+**Problem Statement for Product Manager**
+
+**Problem Statement 1:**
+Title: Product Requirement and Low-Fidelity Wireframes
+
+**Background/Task:**
+A security product requires scanning container images and showing users the findings.
+Container images contain applications with their dependencies and all these components
+might have known vulnerabilities.
+
+**As a user:**
+I need to understand which container images have vulnerabilities and how severe they are.
+If there are any critical or high vulnerabilities, I need to fix them and thus need to identify
+which images have to be fixed.
+I have thousands of images in my repository.
+Help us build a product requirements/wireframe that can help users solve the above
+problems.
+
+**Deliverables:**
+Create a Product Requirements document for the above.
+Create low-fidelity wireframes for the user interface for this product.
+(Bonus/Optional Task) Identify development action items that can be discussed with the
+development team
 
 <img width="1470" alt="Image of Accuknox PM | Harsh Assignment" src="https://github.com/user-attachments/assets/8a6a4571-b957-45e2-b35e-56e9e63bb2e1" />
 
