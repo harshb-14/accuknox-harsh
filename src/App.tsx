@@ -3,21 +3,58 @@ import { Header } from './components/Header';
 import { StatsGrid } from './components/StatsGrid';
 import { ImageTable } from './components/ImageTable';
 import { QuickActions } from './components/QuickActions';
+import { VulnerabilityTrends } from './components/VulnerabilityTrends';
+import { ComplianceStatus } from './components/ComplianceStatus';
+import { BatchActions } from './components/BatchActions';
 import { useRealtime } from './hooks/useRealtime';
 import { useAuth } from './hooks/useAuth';
 import { toast } from 'react-hot-toast';
-import { Shield, Lock, Mail, Eye, EyeOff, Database, Cloud, Server } from 'lucide-react';
+import { Shield, Lock, Mail, Eye, EyeOff, Database, Cloud, Server, Loader2 } from 'lucide-react';
+
+function LoadingScreen() {
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50">
+      <div className="relative">
+        <Shield className="h-16 w-16 text-blue-600 animate-pulse" />
+        <Loader2 className="h-8 w-8 text-blue-600 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-spin" />
+      </div>
+      <h2 className="mt-8 text-2xl font-semibold text-gray-900">Initializing Security Dashboard</h2>
+      <p className="mt-2 text-gray-600">Establishing secure connection...</p>
+      <div className="mt-8 flex items-center space-x-2">
+        <div className="h-2 w-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+        <div className="h-2 w-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+        <div className="h-2 w-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+      </div>
+    </div>
+  );
+}
 
 function AuthenticatedApp() {
+  const [selectedImages, setSelectedImages] = React.useState<string[]>([]);
   useRealtime();
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 pb-20">
       <Header />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <StatsGrid />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+          <div className="lg:col-span-2">
+            <VulnerabilityTrends />
+          </div>
+          <div>
+            <ComplianceStatus />
+          </div>
+        </div>
         <QuickActions />
-        <ImageTable />
+        <ImageTable 
+          selectedImages={selectedImages}
+          onSelectionChange={setSelectedImages}
+        />
+        <BatchActions 
+          selectedImages={selectedImages}
+          onClearSelection={() => setSelectedImages([])}
+        />
       </main>
     </div>
   );
@@ -26,7 +63,6 @@ function AuthenticatedApp() {
 function BackgroundAnimation() {
   return (
     <div className="absolute inset-0 overflow-hidden">
-      {/* Animated grid */}
       <div 
         className="absolute inset-0 opacity-10"
         style={{
@@ -36,7 +72,6 @@ function BackgroundAnimation() {
         }}
       />
 
-      {/* Floating icons */}
       {[...Array(15)].map((_, i) => (
         <div
           key={i}
@@ -58,7 +93,6 @@ function BackgroundAnimation() {
         </div>
       ))}
 
-      {/* Gradient overlay */}
       <div 
         className="absolute inset-0 bg-gradient-to-br from-blue-600/90 to-blue-800/90"
         style={{ mixBlendMode: 'multiply' }}
@@ -113,9 +147,11 @@ function UnauthenticatedApp() {
     setIsSubmitting(true);
     try {
       if (isSignUp) {
-        await signUp(email, password);
-        setNeedsConfirmation(true);
-        toast.success('Please check your email for confirmation instructions');
+        const { user } = await signUp(email, password);
+        if (!user?.identities?.length) {
+          setNeedsConfirmation(true);
+          toast.success('Please check your email for confirmation instructions');
+        }
       } else {
         await signIn(email, password);
       }
@@ -139,7 +175,6 @@ function UnauthenticatedApp() {
 
   return (
     <div className="min-h-screen flex">
-      {/* Left side - Branding */}
       <div className="hidden lg:flex lg:w-1/2 bg-blue-600 p-12 relative overflow-hidden">
         <BackgroundAnimation />
         <div className="w-full max-w-md mx-auto flex flex-col justify-between text-white relative z-10">
@@ -177,7 +212,6 @@ function UnauthenticatedApp() {
         </div>
       </div>
 
-      {/* Right side - Auth form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white">
         <div className="w-full max-w-md space-y-8">
           <div className="text-center">
@@ -312,14 +346,7 @@ export default function App() {
   const { user, loading } = useAuth();
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="flex flex-col items-center space-y-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent"></div>
-          <p className="text-gray-600">Loading your security dashboard...</p>
-        </div>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   return user ? <AuthenticatedApp /> : <UnauthenticatedApp />;

@@ -8,20 +8,22 @@ export function useAuth() {
 
   useEffect(() => {
     // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
+    const getInitialSession = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        setUser(session?.user ?? null);
+      } catch (error) {
+        console.error('Error getting initial session:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getInitialSession();
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      // Refresh session when auth state changes
-      if (session) {
-        const { data } = await supabase.auth.getSession();
-        setUser(data.session?.user ?? null);
-      } else {
-        setUser(null);
-      }
+      setUser(session?.user ?? null);
       setLoading(false);
     });
 
@@ -31,12 +33,7 @@ export function useAuth() {
   const signIn = async (email: string, password: string) => {
     const { error, data } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
-    
-    // Explicitly refresh session after sign in
-    if (data.session) {
-      const { data: { session } } = await supabase.auth.getSession();
-      setUser(session?.user ?? null);
-    }
+    return data;
   };
 
   const signUp = async (email: string, password: string) => {
@@ -51,12 +48,7 @@ export function useAuth() {
       }
     });
     if (error) throw error;
-
-    // Explicitly refresh session after sign up
-    if (data.session) {
-      const { data: { session } } = await supabase.auth.getSession();
-      setUser(session?.user ?? null);
-    }
+    return data;
   };
 
   const resendConfirmation = async (email: string) => {

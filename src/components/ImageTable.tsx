@@ -1,19 +1,50 @@
 import React, { useState } from 'react';
-import { Eye, RotateCcw, Shield } from 'lucide-react';
+import { Eye, RotateCcw, Shield, Download, Calendar, Search } from 'lucide-react';
 import { useImages } from '../hooks/useImages';
 import { formatDistanceToNow } from 'date-fns';
 import { ImageDetailsModal } from './ImageDetailsModal';
 import { ImageActionsMenu } from './ImageActionsMenu';
 
-export function ImageTable() {
+interface ImageTableProps {
+  selectedImages: string[];
+  onSelectionChange: (ids: string[]) => void;
+}
+
+export function ImageTable({ selectedImages, onSelectionChange }: ImageTableProps) {
   const [filters, setFilters] = useState({
     search: '',
     severity: 'all',
     lastScan: 'all',
+    sortBy: 'updated_at',
+    sortOrder: 'desc' as 'asc' | 'desc',
   });
 
   const [selectedImage, setSelectedImage] = useState<any>(null);
   const { images, isLoading, error, startScan, deleteImage } = useImages(filters);
+
+  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      onSelectionChange(images.map(img => img.id));
+    } else {
+      onSelectionChange([]);
+    }
+  };
+
+  const handleSelectImage = (id: string) => {
+    if (selectedImages.includes(id)) {
+      onSelectionChange(selectedImages.filter(i => i !== id));
+    } else {
+      onSelectionChange([...selectedImages, id]);
+    }
+  };
+
+  const handleSort = (field: string) => {
+    setFilters(prev => ({
+      ...prev,
+      sortBy: field,
+      sortOrder: prev.sortBy === field && prev.sortOrder === 'desc' ? 'asc' : 'desc',
+    }));
+  };
 
   if (isLoading) {
     return (
@@ -51,15 +82,13 @@ export function ImageTable() {
       <div className="bg-white rounded-lg shadow-sm overflow-hidden">
         <div className="flex justify-between items-center p-6 border-b border-gray-200">
           <h2 className="text-lg font-medium text-gray-900">Container Images</h2>
-        </div>
-
-        <div className="p-6 border-b border-gray-200">
-          <div className="flex flex-col md:flex-row md:items-center md:space-x-4 space-y-4 md:space-y-0">
-            <div className="flex-1 relative">
+          <div className="flex items-center space-x-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
               <input
                 type="text"
                 placeholder="Search images..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 value={filters.search}
                 onChange={(e) => setFilters({ ...filters, search: e.target.value })}
               />
@@ -91,20 +120,43 @@ export function ImageTable() {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left">
+                  <input
+                    type="checkbox"
+                    checked={selectedImages.length === images.length}
+                    onChange={handleSelectAll}
+                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  />
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => handleSort('name')}>
                   Image Name
+                  {filters.sortBy === 'name' && (
+                    <span className="ml-1">{filters.sortOrder === 'desc' ? '↓' : '↑'}</span>
+                  )}
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => handleSort('critical_vulnerabilities')}>
                   Critical
+                  {filters.sortBy === 'critical_vulnerabilities' && (
+                    <span className="ml-1">{filters.sortOrder === 'desc' ? '↓' : '↑'}</span>
+                  )}
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => handleSort('high_vulnerabilities')}>
                   High
+                  {filters.sortBy === 'high_vulnerabilities' && (
+                    <span className="ml-1">{filters.sortOrder === 'desc' ? '↓' : '↑'}</span>
+                  )}
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => handleSort('medium_vulnerabilities')}>
                   Medium
+                  {filters.sortBy === 'medium_vulnerabilities' && (
+                    <span className="ml-1">{filters.sortOrder === 'desc' ? '↓' : '↑'}</span>
+                  )}
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => handleSort('last_scan')}>
                   Last Scan
+                  {filters.sortBy === 'last_scan' && (
+                    <span className="ml-1">{filters.sortOrder === 'desc' ? '↓' : '↑'}</span>
+                  )}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Status
@@ -117,6 +169,14 @@ export function ImageTable() {
             <tbody className="bg-white divide-y divide-gray-200">
               {images.map((image) => (
                 <tr key={image.id} className="hover:bg-gray-50 transition-colors">
+                  <td className="px-6 py-4">
+                    <input
+                      type="checkbox"
+                      checked={selectedImages.includes(image.id)}
+                      onChange={() => handleSelectImage(image.id)}
+                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    />
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <Shield className="h-5 w-5 text-gray-400 mr-2" />
@@ -139,7 +199,10 @@ export function ImageTable() {
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {image.last_scan ? formatDistanceToNow(new Date(image.last_scan), { addSuffix: true }) : 'Never'}
+                    <div className="flex items-center">
+                      <Calendar className="h-4 w-4 mr-2 text-gray-400" />
+                      {image.last_scan ? formatDistanceToNow(new Date(image.last_scan), { addSuffix: true }) : 'Never'}
+                    </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
@@ -169,12 +232,12 @@ export function ImageTable() {
                       >
                         <RotateCcw className="h-5 w-5" />
                       </button>
-                      <ImageActionsMenu
+                      {/* <ImageActionsMenu
                         image={image}
                         onView={() => setSelectedImage(image)}
                         onStartScan={() => startScan.mutate(image.id)}
                         onDelete={() => deleteImage.mutate(image.id)}
-                      />
+                      /> */}
                     </div>
                   </td>
                 </tr>
