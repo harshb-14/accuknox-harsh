@@ -31,6 +31,69 @@ development team
 
 <img width="1470" alt="Image of Accuknox PM | Harsh Assignment" src="https://github.com/user-attachments/assets/8a6a4571-b957-45e2-b35e-56e9e63bb2e1" />
 
+# Product Requirements Document
+
+## 1. Product Overview
+The **Accuknox PM** enables security teams and developers to efficiently identify, prioritize, and remediate vulnerabilities in container images. The solution scans container repositories, detects known vulnerabilities in images and their dependencies, and presents actionable information through an intuitive interface.
+
+## 2. User Personas
+
+- **Security Engineers:** Responsible for ensuring compliance with security standards and remediating critical vulnerabilities.
+- **DevOps Engineers:** Maintain container repositories and need to ensure deployed containers are secure.
+- **Developers:** Need to understand security implications of their container dependencies.
+
+## 3. Core User Stories
+
+1. As a security engineer, I want to see a dashboard summary of all container vulnerabilities so I can quickly assess my organization's security posture.
+2. As a DevOps engineer, I want to filter and sort container images by vulnerability severity so I can prioritize remediation efforts.
+3. As a developer, I want to understand which specific components in my containers have vulnerabilities so I can update them.
+4. As a security engineer, I want to track remediation progress over time so I can report on security improvements.
+5. As a DevOps engineer, I want to set up automated scanning of my container repository so new vulnerabilities are detected promptly.
+
+## 4. Key Features
+
+### 4.1 Vulnerability Scanning & Assessment
+- Scan container images for known vulnerabilities (CVEs)
+- Classify vulnerabilities by severity (Critical, High, Medium, Low)
+- Identify vulnerable components within container images
+- Provide vulnerability details including potential impact and remediation steps
+
+### 4.2 Repository Management
+- Connect to and scan multiple container repositories
+- Support for major container registries (Docker Hub, AWS ECR, Azure Container Registry, etc.)
+- Schedule automated periodic scans
+- Trigger scans on new image uploads
+
+### 4.3 Visualization & Reporting
+- Dashboard overview of vulnerability status across all repositories
+- Detailed views for individual container images
+- Filtering and sorting capabilities based on severity, repository, and other metadata
+- Exportable reports for compliance and audit purposes
+
+### 4.4 Remediation Workflow
+- Prioritized vulnerability remediation recommendations
+- Integration with ticketing systems for remediation tracking
+- Historical trend analysis of vulnerability remediation
+
+## 5. Non-Functional Requirements
+
+### 5.1 Performance
+- Support scanning of repositories with thousands of container images
+- Complete individual container scans within 5 minutes
+- Dashboard should load within 3 seconds even with large datasets
+
+### 5.2 Security
+- Secure API access to container registries
+- Role-based access control for different user types
+- Encrypted storage of scan results
+
+### 5.3 Usability
+- Intuitive interface requiring minimal training
+- Clear visualization of vulnerability status
+- Mobile-responsive design for on-the-go monitoring
+
+
+
 ## Low-Fidelity Wireframes
 
 **1. Approach of Wireframe Design**
@@ -40,6 +103,10 @@ development team
 **2. Notebook Handmade Design**
 <img width="577" alt="Notebook Handmade Design" src="https://github.com/user-attachments/assets/a236e9b8-42b4-45e7-bf36-9ee0ebe9efc8" /> 
 <br><br>
+
+**3. UI Dashboard**
+<img width="1013" alt="UI Dashboard" src="https://github.com/user-attachments/assets/77648353-8941-47c8-a9f0-9e1243ad7e3e" />
+
 
 
 ## Architecture
@@ -205,7 +272,7 @@ container-security-scanner/
 2. **Email Verification**:
    - Automatic email sent via Supabase
    - Click verification link
-   - Redirect back to application
+   - Once link is clicked from mail id, then come back to application
 
 3. **Sign In**:
    ```typescript
