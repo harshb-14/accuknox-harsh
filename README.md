@@ -1,4 +1,4 @@
-# Accuknox PM | Harsh Assignment
+# Accuknox
 
 [![React](https://img.shields.io/badge/React-18.3.1-blue.svg)](https://reactjs.org/)
 [![Supabase](https://img.shields.io/badge/Supabase-2.39.7-green.svg)](https://supabase.io/)
@@ -8,7 +8,7 @@
 **Problem Statement for Product Manager**
 
 **Problem Statement 1:**
-Title: Product Requirement and Low-Fidelity Wireframes
+Product Requirement and Low-Fidelity Wireframes
 
 **Background/Task:**
 A security product requires scanning container images and showing users the findings.
